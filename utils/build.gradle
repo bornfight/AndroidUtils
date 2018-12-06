@@ -1,6 +1,10 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 
+// JitPack
+group="com.github.degordian"
+version="0.9"
+
 android {
     compileSdkVersion 28
 
