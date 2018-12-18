@@ -10,10 +10,10 @@ import android.content.Intent
 
 object ShareUtil {
 
-    fun shareUrl(context: Context, shareText: String, url: String) {
+    fun shareText(context: Context, shareContent: String, chooserText: String) {
         val sharingIntent = Intent(Intent.ACTION_SEND)
-        sharingIntent.putExtra(Intent.EXTRA_TEXT, url)
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, shareContent)
         sharingIntent.type = "text/plain"
-        context.startActivity(Intent.createChooser(sharingIntent, shareText))
+        context.startActivity(Intent.createChooser(sharingIntent, chooserText))
     }
 }

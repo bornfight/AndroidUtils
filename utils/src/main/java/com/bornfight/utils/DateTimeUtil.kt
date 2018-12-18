@@ -14,11 +14,12 @@ import java.util.*
 
 object DateTimeUtil {
 
-    //FIXME:
-    private val df = SimpleDateFormat.getDateInstance(DateFormat.MEDIUM)
     private val pt = PrettyTime()
 
-    fun getDate(year: Int, month: Int, day: Int): String {
+    /**
+     * @return Returns year, month & day formatted as "yyyy-MM-dd"
+     */
+    fun formatDate(year: Int, month: Int, day: Int): String {
         return String.format(
             Locale.US, "%d-%02d-%02d",
             year,
@@ -27,33 +28,46 @@ object DateTimeUtil {
         )
     }
 
-    fun getDatePretty(year: Int, month: Int, day: Int): String {
+
+    /**
+     * Parses date string "yyyy-MM-dd" to Date
+     */
+    fun parseDate(date: String): Date? {
+        val df = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        return try {
+            df.parse(date)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+
+    /**
+     * Uses {@SimpleDateFormat.getDateInstance()} to format date
+     */
+    fun getDatePretty(year: Int, month: Int, day: Int, dateFormat: Int = DateFormat.MEDIUM): String {
         val c = Calendar.getInstance()
         c.set(Calendar.YEAR, year)
         c.set(Calendar.MONTH, month)
         c.set(Calendar.DATE, day)
+        val df = SimpleDateFormat.getDateInstance(dateFormat)
         return df.format(c.time)
     }
 
-    fun getDatePretty(calendar: Calendar): String {
+    fun getDatePretty(calendar: Calendar, dateFormat: Int = DateFormat.MEDIUM): String {
+        val df = SimpleDateFormat.getDateInstance(dateFormat)
         return df.format(calendar.time)
     }
 
-    fun getDatePretty(date: Date): String {
+    fun getDatePretty(date: Date, dateFormat: Int = DateFormat.MEDIUM): String {
+        val df = SimpleDateFormat.getDateInstance(dateFormat)
         return df.format(date)
     }
 
-    fun parseDate(date: String): Date? {
-        val df = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-        try {
-            return df.parse(date)
-        } catch (e: ParseException) {
-            e.printStackTrace()
-            return null
-        }
-
-    }
-
+    /**
+     * Returns relative date value (1 minute ago, 1 week ago etc.)
+     */
     fun timeLeftPretty(tillDate: Date, @PluralsRes daysPluralsResId: Int, context: Context): String {
         val calCurr = Calendar.getInstance()
         val day = Calendar.getInstance()
