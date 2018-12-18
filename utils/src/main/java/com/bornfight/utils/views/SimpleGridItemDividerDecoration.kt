@@ -15,12 +15,16 @@ class SimpleGridItemDividerDecoration(context: Context, spacingDp: Float) : Recy
     private var spacingPx: Int = 0
 
     init {
-        this.spacingPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, spacingDp,
-            context.resources.displayMetrics).toInt()
+        this.spacingPx = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, spacingDp,
+            context.resources.displayMetrics
+        ).toInt()
     }
 
-    override fun getItemOffsets(outRect: Rect, view: View,
-                                parent: RecyclerView, state: RecyclerView.State) {
+    override fun getItemOffsets(
+        outRect: Rect, view: View,
+        parent: RecyclerView, state: RecyclerView.State
+    ) {
         outRect.right = spacingPx / 2
         outRect.bottom = spacingPx / 2
         outRect.left = spacingPx / 2

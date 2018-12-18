@@ -1,4 +1,4 @@
-package com.bornfight.android.utils
+package com.bornfight.utils
 
 import io.reactivex.Observable
 import java.net.UnknownHostException

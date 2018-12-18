@@ -1,4 +1,4 @@
-package com.bornfight.android.utils
+package com.bornfight.utils
 
 import android.content.Context
 import androidx.annotation.PluralsRes
@@ -19,10 +19,12 @@ object DateTimeUtil {
     private val pt = PrettyTime()
 
     fun getDate(year: Int, month: Int, day: Int): String {
-        return String.format(Locale.US, "%d-%02d-%02d",
+        return String.format(
+            Locale.US, "%d-%02d-%02d",
             year,
             month + 1,
-            day)
+            day
+        )
     }
 
     fun getDatePretty(year: Int, month: Int, day: Int): String {

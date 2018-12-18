@@ -1,4 +1,4 @@
-package com.bornfight.android.utils
+package com.bornfight.utils
 
 import android.content.Context
 import android.graphics.*
@@ -70,7 +70,8 @@ object ImageUtil {
 
 
     private fun calculateInSampleSize(
-        options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+        options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int
+    ): Int {
         // Raw height and width of image
         val height = options.outHeight
         val width = options.outWidth
@@ -149,8 +150,10 @@ object ImageUtil {
 
     fun getCroppedBitmap(bitmap: Bitmap?, width: Int, height: Int): Bitmap? {
         if (bitmap == null) return null
-        val output = Bitmap.createBitmap(width,
-            height, Bitmap.Config.ARGB_8888)
+        val output = Bitmap.createBitmap(
+            width,
+            height, Bitmap.Config.ARGB_8888
+        )
         val canvas = Canvas(output)
 
         val color = -0xbdbdbe
@@ -161,8 +164,10 @@ object ImageUtil {
         canvas.drawARGB(0, 0, 0, 0)
         paint.color = color
         // canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
-        canvas.drawCircle((width / 2).toFloat(), (height / 2).toFloat(),
-            (width / 2).toFloat(), paint)
+        canvas.drawCircle(
+            (width / 2).toFloat(), (height / 2).toFloat(),
+            (width / 2).toFloat(), paint
+        )
         paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
         canvas.drawBitmap(bitmap, rect, rect, paint)
         //Bitmap _bmp = Bitmap.createScaledBitmap(output, 60, 60, false);

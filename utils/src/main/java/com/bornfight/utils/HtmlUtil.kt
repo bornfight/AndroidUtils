@@ -1,4 +1,4 @@
-package com.bornfight.android.utils
+package com.bornfight.utils
 
 import android.os.Build
 import android.text.Html

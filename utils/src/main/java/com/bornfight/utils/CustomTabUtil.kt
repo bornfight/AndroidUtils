@@ -1,9 +1,10 @@
-package com.bornfight.android.utils
+package com.bornfight.utils
 
 import android.content.Context
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
+import com.bornfight.android.utils.R
 
 
 /**

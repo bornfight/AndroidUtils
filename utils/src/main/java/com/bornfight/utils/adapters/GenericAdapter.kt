@@ -1,4 +1,4 @@
-package com.bornfight.android.utils.adapters
+package com.bornfight.utils.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -39,7 +39,10 @@ abstract class GenericAdapter<T> : RecyclerView.Adapter<GenericAdapter.GenericVi
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GenericViewHolder<T> {
-        return getViewHolder(LayoutInflater.from(parent.context).inflate(getLayoutId(viewType), parent, false), viewType)
+        return getViewHolder(
+            LayoutInflater.from(parent.context).inflate(getLayoutId(viewType), parent, false),
+            viewType
+        )
     }
 
     override fun onBindViewHolder(holder: GenericViewHolder<T>, position: Int) {

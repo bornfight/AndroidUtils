@@ -1,4 +1,4 @@
-package com.bornfight.android.utils
+package com.bornfight.utils
 
 import android.os.Bundle
 
@@ -12,7 +12,12 @@ import com.google.firebase.analytics.FirebaseAnalytics
 
 object AnalyticsUtil {
 
-    fun logFirebaseEvent(firebaseAnalytics: FirebaseAnalytics, eventName: String, contentType: String, content: String) {
+    fun logFirebaseEvent(
+        firebaseAnalytics: FirebaseAnalytics,
+        eventName: String,
+        contentType: String,
+        content: String
+    ) {
         val bundle = Bundle()
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, contentType)
         bundle.putString(FirebaseAnalytics.Param.CONTENT, content)

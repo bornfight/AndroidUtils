@@ -1,4 +1,4 @@
-package com.bornfight.android.utils
+package com.bornfight.utils
 
 import android.content.Context
 import android.graphics.Canvas
@@ -9,6 +9,7 @@ import android.text.Html
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import com.bornfight.android.utils.R
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.Request
@@ -17,7 +18,8 @@ import com.bumptech.glide.request.target.ViewTarget
 import com.bumptech.glide.request.transition.Transition
 import java.util.*
 
-class GlideImageGetter(private val mContext: Context, private val mTextView: TextView) : Html.ImageGetter, Drawable.Callback {
+class GlideImageGetter(private val mContext: Context, private val mTextView: TextView) : Html.ImageGetter,
+    Drawable.Callback {
 
     private val mTargets: MutableSet<ImageGetterViewTarget>
 
@@ -63,7 +65,8 @@ class GlideImageGetter(private val mContext: Context, private val mTextView: Tex
 
     }
 
-    private inner class ImageGetterViewTarget internal constructor(view: TextView, private val mDrawable: UrlDrawable) : ViewTarget<TextView, Drawable>(view) {
+    private inner class ImageGetterViewTarget internal constructor(view: TextView, private val mDrawable: UrlDrawable) :
+        ViewTarget<TextView, Drawable>(view) {
         private var request: Request? = null
 
         init {

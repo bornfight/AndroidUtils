@@ -1,4 +1,4 @@
-package com.bornfight.android.utils
+package com.bornfight.utils
 
 import android.view.View
 import android.view.ViewAnimationUtils

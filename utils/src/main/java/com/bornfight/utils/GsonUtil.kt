@@ -1,4 +1,4 @@
-package com.bornfight.android.utils
+package com.bornfight.utils
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

@@ -1,4 +1,4 @@
-package com.bornfight.android.utils
+package com.bornfight.utils
 
 import android.content.Context
 import android.text.SpannableString
@@ -27,9 +27,15 @@ object TextViewUtil {
      * @param spanPlainTextLinks whether to span plain text links with [Linkify.ALL]
      * @param urlClickListener   custom URL click listener, overrides CustomTabUtil.launchUrl method
      */
-    fun spanText(textView: TextView, htmlContent: String?, spanPlainTextLinks: Boolean, urlClickListener: OnUrlClickListener? = null) {
+    fun spanText(
+        textView: TextView,
+        htmlContent: String?,
+        spanPlainTextLinks: Boolean,
+        urlClickListener: OnUrlClickListener? = null
+    ) {
         // create spans for <a href> tags, these open in default browser
-        var hrefSpannable = setCustomUrlSpans(textView.context, SpannableString(HtmlUtil.span(htmlContent)), urlClickListener)
+        var hrefSpannable =
+            setCustomUrlSpans(textView.context, SpannableString(HtmlUtil.span(htmlContent)), urlClickListener)
 
         if (spanPlainTextLinks) {
             // create spans for auto recognized plain text links, these open in default browser
@@ -43,7 +49,11 @@ object TextViewUtil {
         textView.movementMethod = LinkMovementMethod.getInstance()
     }
 
-    private fun setCustomUrlSpans(context: Context, spannableString: SpannableString?, urlClickListener: OnUrlClickListener?): SpannableString {
+    private fun setCustomUrlSpans(
+        context: Context,
+        spannableString: SpannableString?,
+        urlClickListener: OnUrlClickListener?
+    ): SpannableString {
         if (spannableString == null) return SpannableString("")
 
         for (urlSpan in spannableString.getSpans(0, spannableString.length, URLSpan::class.java)) {
@@ -52,8 +62,10 @@ object TextViewUtil {
                     urlClickListener?.onUrlClicked(urlSpan.url) ?: CustomTabUtil.launchUrl(context, urlSpan.url)
                 }
             }
-            spannableString.setSpan(newSpan, spannableString.getSpanStart(urlSpan), spannableString.getSpanEnd(urlSpan),
-                Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+            spannableString.setSpan(
+                newSpan, spannableString.getSpanStart(urlSpan), spannableString.getSpanEnd(urlSpan),
+                Spanned.SPAN_INCLUSIVE_INCLUSIVE
+            )
             spannableString.removeSpan(urlSpan)
         }
         return spannableString
