@@ -21,7 +21,7 @@ abstract class GenericAdapter<T> : RecyclerView.Adapter<GenericAdapter.GenericVi
     }
 
     open fun addItems(listItems: List<T>) {
-        val index = listItems.size
+        val index = this.listItems.size
         this.listItems.addAll(listItems)
         notifyItemRangeInserted(index, listItems.size)
     }
