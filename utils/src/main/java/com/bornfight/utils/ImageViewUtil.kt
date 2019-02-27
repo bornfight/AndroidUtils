@@ -1,3 +1,6 @@
+@file:kotlin.jvm.JvmName("ImageViewUtil")
+@file:kotlin.jvm.JvmMultifileClass
+
 package com.bornfight.utils
 
 import android.graphics.ColorMatrix
@@ -8,14 +11,14 @@ import android.widget.ImageView
  * Created by tomislav on 10/05/2017.
  */
 
-object ImageViewUtil {
+/**
+ * Sets the saturation to 0.
+ */
+fun ImageView.setBlackWhite(imageView: ImageView) {
+    val matrix = ColorMatrix()
+    matrix.setSaturation(0f)
 
-    fun setBlackWhite(imageView: ImageView) {
-        val matrix = ColorMatrix()
-        matrix.setSaturation(0f)
-
-        val filter = ColorMatrixColorFilter(matrix)
-        imageView.colorFilter = filter
-    }
-
+    val filter = ColorMatrixColorFilter(matrix)
+    imageView.colorFilter = filter
 }
+

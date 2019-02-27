@@ -18,13 +18,15 @@ import com.bumptech.glide.request.target.ViewTarget
 import com.bumptech.glide.request.transition.Transition
 import java.util.*
 
+/**
+ * A [Glide] implementation of [Html.ImageGetter] (for use with [Html.fromHtml] method).
+ */
 class GlideImageGetter(private val mContext: Context, private val mTextView: TextView) : Html.ImageGetter,
     Drawable.Callback {
 
     private val mTargets: MutableSet<ImageGetterViewTarget>
 
     init {
-
         clear()
         mTargets = HashSet()
         mTextView.setTag(R.id.drawable_callback_tag, this)
