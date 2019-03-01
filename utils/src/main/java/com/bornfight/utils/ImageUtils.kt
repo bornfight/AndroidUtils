@@ -15,7 +15,7 @@ import java.io.IOException
  *
  * An object which holds a few methods for image manipulation (uri,bitmap,etc)
  */
-object ImageUtil {
+object ImageUtils {
 
     /**
      * Resizes the image, and returns it as [Observable]. Max resolution will be 1080x1080, with 80% quality
@@ -33,7 +33,7 @@ object ImageUtil {
 
             val inSampleSize = calculateInSampleSize(bmOptions, targetW, targetH)
 
-            Log.d("ImageUtil", "Image resize scale factor $inSampleSize")
+            Log.d("ImageUtils", "Image resize scale factor $inSampleSize")
             // Decode the image file into a Bitmap sized to fill the View
             bmOptions.inJustDecodeBounds = false
             bmOptions.inSampleSize = inSampleSize

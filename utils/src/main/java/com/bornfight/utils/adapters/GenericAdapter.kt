@@ -34,6 +34,12 @@ abstract class GenericAdapter<T> : RecyclerView.Adapter<GenericAdapter.GenericVi
         notifyItemRangeInserted(index, listItems.size)
     }
 
+    open fun addItem(listItem: T) {
+        listItems.add(listItem)
+        val index = listItems.indexOf(listItem)
+        notifyItemInserted(index)
+    }
+
     fun getItems(): List<T> {
         return listItems
     }
@@ -44,6 +50,11 @@ abstract class GenericAdapter<T> : RecyclerView.Adapter<GenericAdapter.GenericVi
 
     fun getItemPosition(item: T): Int {
         return listItems.indexOf(item)
+    }
+
+    fun clearItems() {
+        listItems.clear()
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GenericViewHolder<T> {
