@@ -26,6 +26,11 @@ abstract class GenericAdapter<T> : RecyclerView.Adapter<GenericAdapter.GenericVi
         notifyItemRangeInserted(index, listItems.size)
     }
 
+    open fun addItem(listItem: T) {
+        listItems.add(listItem)
+        notifyItemInserted(listItems.indexOf(listItem))
+    }
+
     fun getItemsList(): List<T> {
         return listItems
     }
