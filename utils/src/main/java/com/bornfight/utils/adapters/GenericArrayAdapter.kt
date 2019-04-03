@@ -109,42 +109,6 @@ abstract class GenericArrayAdapter<T> @JvmOverloads constructor(context: Context
         }
     }
 
-    /**
-     * Use this method within the bind() method implementation if you want to span the query
-     * occurrences in the filtered results.
-     *
-     * @param result The whole text of the result.
-     * @param query The part of result which needs to be spanned.
-     * @param fontColor The color of the spanned result. If null is provided, fontColor wont set.
-     * @param backColor The background color of the spanned result. If null is provided, backColor wont set.
-     * @param bold Defines if spanned text should be bold.
-     */
-    fun spanQueryInFilteredResults(result: String, query: String?, fontColor: Int?,
-                                   backColor: Int?, bold: Boolean): Spanned {
-        val spannedText = SpannableString(result)
-
-        query?.let {
-            var lastIndex = spannedText.indexOf(query, 0, true)
-            while (lastIndex != -1) {
-                fontColor?.let {
-                    spannedText.setSpan(ForegroundColorSpan(fontColor), lastIndex,
-                        lastIndex + query.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-                }
-                backColor?.let {
-                    spannedText.setSpan(BackgroundColorSpan(backColor), lastIndex,
-                        lastIndex + query.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-                }
-                if (bold)
-                    spannedText.setSpan(StyleSpan(Typeface.BOLD), lastIndex,
-                        lastIndex + query.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-
-                lastIndex = spannedText.indexOf(query, lastIndex + 1, true)
-            }
-        }
-
-        return spannedText
-    }
-
     @LayoutRes
     protected abstract fun getLayoutId(viewType: Int): Int
 
