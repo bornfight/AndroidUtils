@@ -1,1 +1,12 @@
+*.iml
+.gradle
+/local.properties
+.DS_Store
 /build
+/captures
+.externalNativeBuild
+*.apk
+.idea/
+!/.idea/codeStyles
+!/.idea/codeStyles/codeStyleConfig.xml
+!/.idea/codeStyles/Project.xml

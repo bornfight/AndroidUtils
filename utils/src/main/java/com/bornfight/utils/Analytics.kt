@@ -4,7 +4,6 @@
 package com.bornfight.utils
 
 import android.os.Bundle
-
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -38,7 +37,9 @@ fun logFirebaseEvent(
 fun logAnswersEvent(answers: Answers, eventName: String, customAttributes: Map<String, String>) {
     val ce = CustomEvent(eventName)
     customAttributes.entries.forEach { (attributeKey, attributeValue) ->
-        ce.putCustomAttribute(attributeKey, attributeValue)
+        ce.putCustomAttribute(
+            attributeKey, attributeValue.substring(0, Math.min(attributeValue.length, 99))
+        )
     }
     answers.logCustom(ce)
 }
