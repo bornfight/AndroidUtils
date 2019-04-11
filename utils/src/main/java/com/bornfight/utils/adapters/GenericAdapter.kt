@@ -36,11 +36,10 @@ abstract class GenericAdapter<T> : RecyclerView.Adapter<GenericAdapter.GenericVi
 
     open fun addItem(listItem: T) {
         listItems.add(listItem)
-        val index = listItems.indexOf(listItem)
-        notifyItemInserted(index)
+        notifyItemInserted(listItems.indexOf(listItem))
     }
 
-    fun getItems(): List<T> {
+    fun getItemsList(): List<T> {
         return listItems
     }
 
