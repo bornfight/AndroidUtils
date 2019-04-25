@@ -34,7 +34,7 @@ class PaginatedData<T>(val limit: Int, private val load: (limit: Int, page: Int)
                 }
                 .doOnError {
                     // if local error occurred, enable further pagination, but don't increase current page, try loading again
-                    if (it is UnknownHostException) {
+                    if (it.cause is UnknownHostException || it is UnknownHostException) {
                         completed(true, true)
                     } else {
                         completed(true, false)
