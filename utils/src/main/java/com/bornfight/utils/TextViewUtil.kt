@@ -1,12 +1,13 @@
 package com.bornfight.utils
 
 import android.content.Context
-import android.graphics.Typeface
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
-import android.text.style.*
+import android.text.style.CharacterStyle
+import android.text.style.ClickableSpan
+import android.text.style.URLSpan
 import android.text.util.Linkify
 import android.view.View
 import android.widget.TextView
@@ -79,32 +80,19 @@ object TextViewUtil {
      *
      * @param text The text to span occurrences in.
      * @param textToSpan The part of text which needs to be spanned.
-     * @param fontColor The color of the spanned text. If null is provided, fontColor wont set.
-     * @param backColor The background color of the spanned text. If null is provided, backColor wont set.
-     * @param bold Defines if spanned text should be bold.
+     * @param styles vararg of spans you wish to apply to string occurrences.
      */
-    fun spanStringOccurences(text: String, textToSpan: String?, fontColor: Int?,
-                                   backColor: Int?, bold: Boolean): Spanned {
+    fun spanStringOccurrences(text: String, textToSpan: String?, vararg styles: CharacterStyle): Spanned {
         val spannedText = SpannableString(text)
 
         textToSpan?.let {
             var lastIndex = spannedText.indexOf(textToSpan, 0, true)
             while (lastIndex != -1) {
-                fontColor?.let {
+                styles.forEach {
                     spannedText.setSpan(
-                        ForegroundColorSpan(fontColor), lastIndex,
+                        CharacterStyle.wrap(it), lastIndex,
                         lastIndex + textToSpan.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
                 }
-                backColor?.let {
-                    spannedText.setSpan(
-                        BackgroundColorSpan(backColor), lastIndex,
-                        lastIndex + textToSpan.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-                }
-                if (bold)
-                    spannedText.setSpan(
-                        StyleSpan(Typeface.BOLD), lastIndex,
-                        lastIndex + textToSpan.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-
                 lastIndex = spannedText.indexOf(textToSpan, lastIndex + 1, true)
             }
         }
