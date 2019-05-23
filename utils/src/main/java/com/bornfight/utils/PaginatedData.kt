@@ -99,7 +99,7 @@ class PaginatedData<T>(val limit: Int, private val load: (limit: Int, page: Int)
             loadingEnabled = false
             oldItems.clear()
             items.clear()
-            return load(false)
+            return load(false).firstElement().toObservable()
         } else {
             return Observable.empty()
         }
