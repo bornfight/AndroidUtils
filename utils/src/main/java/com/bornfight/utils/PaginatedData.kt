@@ -6,11 +6,13 @@ import java.net.UnknownHostException
 
 /**
  * Created by tomislav on 01/03/2018.
+ * Updated by tomislav on 24/05/2019.
  */
 class PaginatedData<T>(val limit: Int, private val load: (limit: Int, page: Int) -> Observable<List<T>>) {
 
     private var page = 1
-    private var loadingEnabled = true
+    var loadingEnabled = true
+        private set
 
     private val oldItems: MutableList<T> = mutableListOf()
     private val items: MutableList<T> = mutableListOf()
@@ -19,6 +21,17 @@ class PaginatedData<T>(val limit: Int, private val load: (limit: Int, page: Int)
         if (loadingEnabled) {
             loadingEnabled = false
             return load(true)
+        } else {
+            return Observable.empty()
+        }
+    }
+
+    fun refreshData(): Observable<List<T>> {
+        if (loadingEnabled) {
+            loadingEnabled = false
+            oldItems.clear()
+            items.clear()
+            return load(false)
         } else {
             return Observable.empty()
         }
@@ -35,9 +48,9 @@ class PaginatedData<T>(val limit: Int, private val load: (limit: Int, page: Int)
             // if the items remained the same or the first call had less than #limit items, all items were loaded and the
             // pagination will stop
             if (oldItems != items && items.size >= limit) {
-                completed(true, true)
+                completed(enableLoading = true, increasePage = more)
             } else {
-                completed(false, false)
+                completed(enableLoading = false, increasePage = false)
             }
             oldItems.clear()
             oldItems.addAll(items)
@@ -45,9 +58,9 @@ class PaginatedData<T>(val limit: Int, private val load: (limit: Int, page: Int)
             .doOnError {
                 // if local error occurred, enable further pagination, but don't increase current page, try loading again
                 if (it.cause is UnknownHostException || it is UnknownHostException) {
-                    completed(true, true)
+                    completed(enableLoading = true, increasePage = more)
                 } else {
-                    completed(true, false)
+                    completed(enableLoading = true, increasePage = false)
                 }
             }
             .doOnDispose {
@@ -93,18 +106,6 @@ class PaginatedData<T>(val limit: Int, private val load: (limit: Int, page: Int)
         return items
     }
 
-
-    fun refreshData(): Observable<List<T>> {
-        if (loadingEnabled) {
-            loadingEnabled = false
-            oldItems.clear()
-            items.clear()
-            return load(false).take(1)
-        } else {
-            return Observable.empty()
-        }
-    }
-
     fun replaceItem(oldItem: T, newItem: T): Observable<List<T>> {
         return Observable.fromCallable {
             val index = items.indexOf(oldItem)
@@ -132,9 +133,4 @@ class PaginatedData<T>(val limit: Int, private val load: (limit: Int, page: Int)
             items
         }
     }
-
-    val isLoadingEnabled: Boolean
-        get() = !loadingEnabled
-
-
 }
