@@ -73,6 +73,7 @@ class PaginatedData<T>(val limit: Int, private val load: (limit: Int, page: Int)
                     val diffItems = items.filter { !oldItems.contains(it) }
                     oldItems.removeAll(diffItems)
                 }
+                loadingEnabled = true
             }
             .map { newItems ->
                 if (page == 1) {
