@@ -114,6 +114,7 @@ class PaginatedData<T>(val limit: Int, private val load: (limit: Int, page: Int)
         loadingEnabled = true
     }
 
+    @Deprecated(message = "Use variable getter for items", replaceWith = ReplaceWith("items"))
     fun getData(): List<T> {
         return items
     }
