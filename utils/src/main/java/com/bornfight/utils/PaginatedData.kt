@@ -11,12 +11,19 @@ import java.net.UnknownHostException
 class PaginatedData<T>(val limit: Int, private val load: (limit: Int, page: Int) -> Observable<List<T>>) {
 
     private var page = 1
+    var reachedEnd = false
+        private set
+
     var loadingEnabled = true
         private set
+        get() = field && !reachedEnd
 
     private val oldItems: MutableList<T> = mutableListOf()
     private val items: MutableList<T> = mutableListOf()
 
+    /**
+     * Call to load next page of data
+     */
     fun loadMore(): Observable<List<T>> {
         if (loadingEnabled) {
             loadingEnabled = false
@@ -26,6 +33,9 @@ class PaginatedData<T>(val limit: Int, private val load: (limit: Int, page: Int)
         }
     }
 
+    /**
+     * Refresh only existing data (all loaded pages)
+     */
     fun refreshData(): Observable<List<T>> {
         if (loadingEnabled) {
             loadingEnabled = false
@@ -50,7 +60,7 @@ class PaginatedData<T>(val limit: Int, private val load: (limit: Int, page: Int)
             if (oldItems != items && items.size >= limit) {
                 completed(enableLoading = true, increasePage = more)
             } else {
-                completed(enableLoading = false, increasePage = false)
+                completed(enableLoading = false, increasePage = false, reachedEnd = true)
             }
             oldItems.clear()
             oldItems.addAll(items)
@@ -73,7 +83,7 @@ class PaginatedData<T>(val limit: Int, private val load: (limit: Int, page: Int)
                     val diffItems = items.filter { !oldItems.contains(it) }
                     oldItems.removeAll(diffItems)
                 }
-                loadingEnabled = true
+                completed(enableLoading = true, increasePage = false)
             }
             .map { newItems ->
                 if (page == 1) {
@@ -86,16 +96,20 @@ class PaginatedData<T>(val limit: Int, private val load: (limit: Int, page: Int)
             }
     }
 
-    private fun completed(enableLoading: Boolean, increasePage: Boolean) {
-        loadingEnabled = enableLoading
-
+    private fun completed(enableLoading: Boolean, increasePage: Boolean, reachedEnd: Boolean = this.reachedEnd) {
+        this.loadingEnabled = enableLoading
+        this.reachedEnd = reachedEnd
         if (increasePage) {
             page++
         }
     }
 
+    @Deprecated(
+        message = "This method should not be used to check if feed reached end.",
+        replaceWith = ReplaceWith("reachedEnd")
+    )
     fun reachedEnd(): Boolean {
-        return !loadingEnabled
+        return reachedEnd
     }
 
     fun reset() {
@@ -107,6 +121,10 @@ class PaginatedData<T>(val limit: Int, private val load: (limit: Int, page: Int)
         return items
     }
 
+    /**
+     * Replaces one item and returns new Observable with updated list.
+     * If the oldItem doesn't exists, the list will not be updated
+     */
     fun replaceItem(oldItem: T, newItem: T): Observable<List<T>> {
         return Observable.fromCallable {
             val index = items.indexOf(oldItem)
@@ -118,6 +136,9 @@ class PaginatedData<T>(val limit: Int, private val load: (limit: Int, page: Int)
         }
     }
 
+    /**
+     * Removes one item and returns new Observable with updated list
+     */
     fun removeItem(item: T): Observable<List<T>> {
         return Observable.fromCallable {
             val index = items.indexOf(item)
@@ -128,6 +149,9 @@ class PaginatedData<T>(val limit: Int, private val load: (limit: Int, page: Int)
         }
     }
 
+    /**
+     * Adds one item and returns new Observable with updated list
+     */
     fun addItem(position: Int, item: T): Observable<List<T>> {
         return Observable.fromCallable {
             items.add(position, item)
