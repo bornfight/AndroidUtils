@@ -6,8 +6,17 @@ import java.net.UnknownHostException
 
 /**
  * Created by tomislav on 01/03/2018.
- * Updated by tomislav on 24/05/2019.
+ *
+ * This object is an addition to the standard MVP architecture, and it offers help with paginated data.
+ * If your API returns collection data regarding to page/limit/perPage criteria, you can use this as follows:
+ *
+ * Extend PaginatedData in your presenter.
+ * You can use
+ *
+ * @param limit the limit/perPage parameter which indicated how much items you want from API per page
+ * @param load the function which will be called to load new data (e.g. a repository call)
  */
+
 class PaginatedData<T>(val limit: Int, private val load: (limit: Int, page: Int) -> Observable<List<T>>) {
 
     private var page = 1
@@ -15,7 +24,9 @@ class PaginatedData<T>(val limit: Int, private val load: (limit: Int, page: Int)
         private set
 
     private val oldItems: MutableList<T> = mutableListOf()
-    private val items: MutableList<T> = mutableListOf()
+    @Volatile
+    var items: MutableList<T> = mutableListOf()
+    private set
 
     fun loadMore(): Observable<List<T>> {
         if (loadingEnabled) {
@@ -103,6 +114,7 @@ class PaginatedData<T>(val limit: Int, private val load: (limit: Int, page: Int)
         loadingEnabled = true
     }
 
+    @Deprecated(message = "Use variable getter for items", replaceWith = ReplaceWith("items"))
     fun getData(): List<T> {
         return items
     }
