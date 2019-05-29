@@ -115,20 +115,17 @@ class PaginatedData<T>(val limit: Int, private val load: (limit: Int, page: Int)
         }
     }
 
-    @Deprecated(
-        message = "This method should not be used to check if feed reached end.",
-        replaceWith = ReplaceWith("reachedEnd")
-    )
-    fun reachedEnd(): Boolean {
-        return reachedEnd
-    }
-
     fun reset() {
         page = 1
         loadingEnabled = true
     }
 
-    @Deprecated(message = "Use variable getter for items", replaceWith = ReplaceWith("items"))
+    @Deprecated(message = "Use reachedEnd instead")
+    fun reachedEnd(): Boolean {
+        return reachedEnd
+    }
+
+    @Deprecated(message = "Use items instead")
     fun getData(): List<T> {
         return items
     }
