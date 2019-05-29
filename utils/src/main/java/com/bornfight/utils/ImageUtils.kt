@@ -10,12 +10,16 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-
 /**
  * Created by tomislav on 08/06/16.
+ *
+ * An object which holds a few methods for image manipulation (uri,bitmap,etc)
  */
-object ImageUtil {
+object ImageUtils {
 
+    /**
+     * Resizes the image, and returns it as [Observable]. Max resolution will be 1080x1080, with 80% quality
+     */
     fun getResizedImagePath(context: Context, imageUri: Uri): Observable<Uri> {
         return Observable.fromCallable {
             // Get the dimensions of the View
@@ -29,7 +33,7 @@ object ImageUtil {
 
             val inSampleSize = calculateInSampleSize(bmOptions, targetW, targetH)
 
-            Log.d("ImageUtil", "Image resize scale factor $inSampleSize")
+            Log.d("ImageUtils", "Image resize scale factor $inSampleSize")
             // Decode the image file into a Bitmap sized to fill the View
             bmOptions.inJustDecodeBounds = false
             bmOptions.inSampleSize = inSampleSize
@@ -37,15 +41,14 @@ object ImageUtil {
 
             val bitmap = BitmapFactory.decodeFile(imageUri.path, bmOptions)
 
-            /*
+            /* MEMORY LEAKS
                 try {
                     bitmap = rotateImageIfRequired(context, bitmap, new Uri.Builder().path(imagePath).build());
                 } catch (OutOfMemoryError e) {
                     Crashlytics.logException(e);
                     e.printStackTrace();
                 }
-                */
-
+            */
 
             val tempFile = File(context.cacheDir, "Image_" + System.currentTimeMillis() + ".jpg")
 
@@ -68,7 +71,14 @@ object ImageUtil {
         }
     }
 
-
+    /**
+     * Calculate the largest inSampleSize value that is a power of 2 and keeps both height and width
+     * larger than the requested height and width.
+     *
+     * @param reqHeight
+     * @param reqWidth
+     * @return [BitmapFactory.Options.inSampleSize] value
+     */
     private fun calculateInSampleSize(
         options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int
     ): Int {
@@ -96,7 +106,12 @@ object ImageUtil {
         return inSampleSize
     }
 
-
+    /**
+     * Returns the [ExifInterface] orientation for the given file
+     *
+     * @param filepath the file path (e.g. from [URI])
+     * @return an integer degree value (from [ExifInterface].ORIENTATION_ROTATE_*)
+     */
     fun getExifOrientation(filepath: String?): Int {// YOUR MEDIA PATH AS STRING
         if (filepath == null) return 0
 
@@ -124,7 +139,8 @@ object ImageUtil {
 
 
     /**
-     * Rotate an image if required.
+     * Rotates an image if required.
+     * Was being used in [getResizedImagePath], but not used anymore due to memory leaks.
      */
     private fun rotateImageIfRequired(context: Context, img: Bitmap, selectedImage: Uri): Bitmap {
 
@@ -147,7 +163,9 @@ object ImageUtil {
         }
     }
 
-
+    /**
+     * Returns a cropped bitmap with the specified width/height
+     */
     fun getCroppedBitmap(bitmap: Bitmap?, width: Int, height: Int): Bitmap? {
         if (bitmap == null) return null
         val output = Bitmap.createBitmap(
