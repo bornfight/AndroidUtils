@@ -20,14 +20,14 @@ import android.widget.TextView
 object TextViewUtil {
 
     /**
-     * First spans the `"a href"` html tags, then uses [Linkify.addLinks] to span plain text links (web,
+     * First spans the `"a href"` html tags, then uses [Linkify.addLinks] to spanHtml plain text links (web,
      * phone, email...)
      * Then replaces [URLSpan]s with custom ones which open the links with [CustomTabUtil.launchUrl] or your
      * custom [TextViewUtil.OnUrlClickListener] will be triggered
      *
      * @param textView           sets the spanned text to the `textView`
      * @param htmlContent        html content that should be spanned and added to `textView`
-     * @param spanPlainTextLinks whether to span plain text links with [Linkify.ALL]
+     * @param spanPlainTextLinks whether to spanHtml plain text links with [Linkify.ALL]
      * @param urlClickListener   custom URL click listener, overrides CustomTabUtil.launchUrl method
      */
     fun spanText(
@@ -38,20 +38,24 @@ object TextViewUtil {
     ) {
         // create spans for <a href> tags, these open in default browser
         var hrefSpannable =
-            setCustomUrlSpans(textView.context, SpannableString(HtmlUtil.span(htmlContent)), urlClickListener)
+            setCustomUrlSpans(textView.context, SpannableString(htmlContent.spanHtml()), urlClickListener)
 
         if (spanPlainTextLinks) {
             // create spans for auto recognized plain text links, these open in default browser
             Linkify.addLinks(hrefSpannable, Linkify.ALL)
         }
 
-        // final span of links, default URLSpans will now be replaced and opened in custom tabs
+        // final spanHtml of links, default URLSpans will now be replaced and opened in custom tabs
         hrefSpannable = setCustomUrlSpans(textView.context, hrefSpannable, urlClickListener)
 
         textView.text = hrefSpannable
         textView.movementMethod = LinkMovementMethod.getInstance()
     }
 
+    /**
+     * Iterates through all [URLSpan]s already in the given [SpannableString], and replaces them with a custom
+     * [ClickableSpan] which uses [launchUrl] or [OnUrlClickListener]
+     */
     private fun setCustomUrlSpans(
         context: Context,
         spannableString: SpannableString?,
@@ -62,7 +66,7 @@ object TextViewUtil {
         for (urlSpan in spannableString.getSpans(0, spannableString.length, URLSpan::class.java)) {
             val newSpan = object : ClickableSpan() {
                 override fun onClick(widget: View) {
-                    urlClickListener?.onUrlClicked(urlSpan.url) ?: CustomTabUtil.launchUrl(context, urlSpan.url)
+                    urlClickListener?.onUrlClicked(urlSpan.url) ?: context.launchUrl(urlSpan.url)
                 }
             }
             spannableString.setSpan(

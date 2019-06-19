@@ -20,7 +20,7 @@ import java.io.File
 /**
  * Returns [Html.fromHtml], depending on the SDK version. (the deprecated version if < [Build.VERSION_CODES.N] )
  */
-fun String?.span(): Spanned {
+fun String?.spanHtml(): Spanned {
     if (this == null) return SpannedString("")
 
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

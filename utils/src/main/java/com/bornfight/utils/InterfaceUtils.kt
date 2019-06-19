@@ -1,90 +1,21 @@
-@file:kotlin.jvm.JvmName("TextViewUtil")
+@file:kotlin.jvm.JvmName("InterfaceUtil")
 @file:kotlin.jvm.JvmMultifileClass
 
 package com.bornfight.utils
 
 import android.annotation.TargetApi
 import android.app.Activity
-import android.content.Context
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.os.Build
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
-import android.text.style.URLSpan
-import android.text.util.Linkify
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator
 
 /**
  * Created by ianic on 01/03/2019.
  */
-
-/**
- * First spans the `"a href"` html tags, then uses [Linkify.addLinks] to span plain text links (web,
- * phone, email...)
- * Then replaces [URLSpan]s with custom ones which open the links with [launchUrl] or your
- * custom [TextViewUtil.OnUrlClickListener] will be triggered
- *
- * @param htmlContent        html content that should be spanned and added to `textView`
- * @param spanPlainTextLinks whether to span plain text links with [Linkify.ALL]
- * @param urlClickListener   custom URL click listener, overrides CustomTabUtil.launchUrl method
- */
-fun TextView.spanText(
-    htmlContent: String?,
-    spanPlainTextLinks: Boolean,
-    urlClickListener: OnUrlClickListener? = null
-) {
-    // create spans for <a href> tags, these open in default browser
-    var hrefSpannable =
-        setCustomUrlSpans(context, SpannableString(htmlContent.span()), urlClickListener)
-
-    if (spanPlainTextLinks) {
-        // create spans for auto recognized plain text links, these open in default browser
-        Linkify.addLinks(hrefSpannable, Linkify.ALL)
-    }
-
-    // final span of links, default URLSpans will now be replaced and opened in custom tabs
-    hrefSpannable = setCustomUrlSpans(context, hrefSpannable, urlClickListener)
-
-    text = hrefSpannable
-    movementMethod = LinkMovementMethod.getInstance()
-}
-
-/**
- * Iterates through all [URLSpan]s already in the given [SpannableString], and replaces them with a custom
- * [ClickableSpan] which uses [launchUrl] or [OnUrlClickListener]
- */
-private fun setCustomUrlSpans(
-    context: Context,
-    spannableString: SpannableString?,
-    urlClickListener: OnUrlClickListener?
-): SpannableString {
-    if (spannableString == null) return SpannableString("")
-
-    for (urlSpan in spannableString.getSpans(0, spannableString.length, URLSpan::class.java)) {
-        val newSpan = object : ClickableSpan() {
-            override fun onClick(widget: View) {
-                urlClickListener?.onUrlClicked(urlSpan.url) ?: context.launchUrl(urlSpan.url)
-            }
-        }
-        spannableString.setSpan(
-            newSpan, spannableString.getSpanStart(urlSpan), spannableString.getSpanEnd(urlSpan),
-            Spanned.SPAN_INCLUSIVE_INCLUSIVE
-        )
-        spannableString.removeSpan(urlSpan)
-    }
-    return spannableString
-}
-
-interface OnUrlClickListener {
-    fun onUrlClicked(url: String)
-}
 
 /**
  * Sets the saturation of this [ImageView] to 0.
