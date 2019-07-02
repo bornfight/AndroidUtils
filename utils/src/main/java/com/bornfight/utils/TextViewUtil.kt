@@ -3,11 +3,13 @@ package com.bornfight.utils
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
+import android.text.method.LinkMovementMethod
 import android.text.style.CharacterStyle
 import android.text.style.ClickableSpan
 import android.text.style.URLSpan
 import android.text.util.Linkify
 import android.view.View
+import android.widget.TextView
 
 /**
  * Created by tomislav on 20/03/2018.
@@ -94,4 +96,13 @@ object TextViewUtil {
 
         return spannedText
     }
+}
+
+
+/**
+ * Span HTML content with links, make them clickable and open them in CustomTab
+ */
+fun TextView.spanHtml(htmlContent: String?, spanPlainTextLinks: Boolean = true) {
+    this.text = TextViewUtil.spanText(htmlContent, spanPlainTextLinks) { this.context.launchUrl(it) }
+    this.movementMethod = LinkMovementMethod.getInstance()
 }
