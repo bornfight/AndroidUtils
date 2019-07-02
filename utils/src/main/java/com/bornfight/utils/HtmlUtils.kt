@@ -38,7 +38,7 @@ fun String?.spanHtml(): Spanned {
  * @param formName [MultipartBody.Part.createFormData] name ]
  * @return [MultipartBody.Part.createFormData] result
  */
-fun MultipartBody.Part.createFormData(contentUri: Uri, mediaType: String, formName: String): MultipartBody.Part {
+fun createFormData(contentUri: Uri, mediaType: String, formName: String): MultipartBody.Part {
     val imageFile = File(contentUri.path)
     val fileReqBody = RequestBody.create(MediaType.parse(mediaType), imageFile)
     return MultipartBody.Part.createFormData(formName, imageFile.name, fileReqBody)
