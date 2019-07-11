@@ -62,7 +62,7 @@ class PaginatedData<T>(val limit: Int, private val load: (limit: Int, page: Int)
         return if (more) {
             load(limit, page)
         } else {
-            load((page - 1) * limit, 1)
+            load(page * limit, 1)
         }.doOnComplete {
             // if there was a change in items (new items loaded from server and the first call had at least #limit items
             // request was successful and pagination will continue
