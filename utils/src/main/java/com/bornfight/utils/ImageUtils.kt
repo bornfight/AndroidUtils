@@ -5,6 +5,7 @@ import android.graphics.*
 import android.media.ExifInterface
 import android.net.Uri
 import android.util.Log
+import com.crashlytics.android.Crashlytics
 import io.reactivex.Observable
 import java.io.File
 import java.io.FileOutputStream
@@ -39,16 +40,18 @@ object ImageUtils {
             bmOptions.inSampleSize = inSampleSize
             bmOptions.inPurgeable = true
 
-            val bitmap = BitmapFactory.decodeFile(imageUri.path, bmOptions)
+            var bitmap = BitmapFactory.decodeFile(imageUri.path, bmOptions)
 
-            /* MEMORY LEAKS
-                try {
-                    bitmap = rotateImageIfRequired(context, bitmap, new Uri.Builder().path(imagePath).build());
-                } catch (OutOfMemoryError e) {
-                    Crashlytics.logException(e);
-                    e.printStackTrace();
-                }
-            */
+            try {
+                bitmap = rotateImageIfRequired(
+                    context,
+                    bitmap,
+                    Uri.Builder().path(imageUri.path).build()
+                )
+            } catch (e: OutOfMemoryError) {
+                Crashlytics.logException(e)
+                e.printStackTrace()
+            }
 
             val tempFile = File(context.cacheDir, "Image_" + System.currentTimeMillis() + ".jpg")
 
