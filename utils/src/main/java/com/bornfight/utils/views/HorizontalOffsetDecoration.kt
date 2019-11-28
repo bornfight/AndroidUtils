@@ -19,9 +19,18 @@ class HorizontalOffsetDecoration(context: Context, offset: Float) : RecyclerView
         outRect: Rect, view: View,
         parent: RecyclerView, state: RecyclerView.State
     ) {
+        val itemPosition = parent.getChildAdapterPosition(view)
 
-        outRect.left = offset / 2
-        outRect.right = offset / 2
+        if (itemPosition == 0) {
+            outRect.left = 0
+        } else {
+            outRect.left = offset / 2
+        }
 
+        if (itemPosition == (parent.adapter?.itemCount ?: 0) - 1) {
+            outRect.right = 0
+        } else {
+            outRect.right = offset / 2
+        }
     }
 }

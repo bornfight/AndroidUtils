@@ -119,6 +119,7 @@ class PaginatedData<T>(val limit: Int, private val load: (limit: Int, page: Int)
         page = 1
         loadingEnabled = true
         reachedEnd = false
+        oldItems.clear()
     }
 
     @Deprecated(message = "Use reachedEnd instead")

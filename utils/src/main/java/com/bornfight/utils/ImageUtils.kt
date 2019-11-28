@@ -5,7 +5,6 @@ import android.graphics.*
 import android.media.ExifInterface
 import android.net.Uri
 import android.util.Log
-import com.crashlytics.android.Crashlytics
 import io.reactivex.Observable
 import java.io.File
 import java.io.FileOutputStream
@@ -21,18 +20,20 @@ object ImageUtils {
     /**
      * Resizes the image, and returns it as [Observable]. Max resolution will be 1080x1080, with 80% quality
      */
-    fun getResizedImagePath(context: Context, imageUri: Uri): Observable<Uri> {
+    fun getResizedImagePath(
+        context: Context,
+        imageUri: Uri,
+        targetWidth: Int = 1080,
+        targetHeight: Int = 1080
+    ): Observable<Uri> {
         return Observable.fromCallable {
-            // Get the dimensions of the View
-            val targetW = 1080
-            val targetH = 1080
 
             // Get the dimensions of the bitmap
             val bmOptions = BitmapFactory.Options()
             bmOptions.inJustDecodeBounds = true
             BitmapFactory.decodeFile(imageUri.path, bmOptions)
 
-            val inSampleSize = calculateInSampleSize(bmOptions, targetW, targetH)
+            val inSampleSize = calculateInSampleSize(bmOptions, targetWidth, targetHeight)
 
             Log.d("ImageUtils", "Image resize scale factor $inSampleSize")
             // Decode the image file into a Bitmap sized to fill the View
@@ -49,7 +50,6 @@ object ImageUtils {
                     Uri.Builder().path(imageUri.path).build()
                 )
             } catch (e: OutOfMemoryError) {
-                Crashlytics.logException(e)
                 e.printStackTrace()
             }
 
