@@ -53,24 +53,24 @@ object ImageUtils {
                 e.printStackTrace()
             }
 
-            val tempFile = File(context.cacheDir, "Image_" + System.currentTimeMillis() + ".jpg")
+          val tempFile = File(context.cacheDir, "Image_" + System.currentTimeMillis() + ".jpg")
 
-            val fos = FileOutputStream(tempFile)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos)
-            fos.flush()
-            fos.close()
-            bitmap.recycle()
+          val fos = FileOutputStream(tempFile)
+          bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos)
+          fos.flush()
+          fos.close()
+          bitmap.recycle()
 
-            val oldExif = ExifInterface(imageUri.path)
-            val exifOrientation = oldExif.getAttribute(ExifInterface.TAG_ORIENTATION)
+          val oldExif = imageUri.path?.let { ExifInterface(it) }
+          val exifOrientation = oldExif?.getAttribute(ExifInterface.TAG_ORIENTATION)
 
-            if (exifOrientation != null) {
-                val newExif = ExifInterface(tempFile.path)
-                newExif.setAttribute(ExifInterface.TAG_ORIENTATION, exifOrientation)
-                newExif.saveAttributes()
-            }
+          if (exifOrientation != null) {
+            val newExif = ExifInterface(tempFile.path)
+            newExif.setAttribute(ExifInterface.TAG_ORIENTATION, exifOrientation)
+            newExif.saveAttributes()
+          }
 
-            Uri.fromFile(tempFile)
+          Uri.fromFile(tempFile)
         }
     }
 

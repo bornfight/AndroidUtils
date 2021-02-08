@@ -1,13 +1,6 @@
 package com.bornfight.utils.adapters
 
 import android.content.Context
-import android.graphics.Typeface
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.BackgroundColorSpan
-import android.text.style.ForegroundColorSpan
-import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -67,16 +60,16 @@ abstract class GenericArrayAdapter<T> @JvmOverloads constructor(context: Context
         return valueFilter
     }
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        var listItemView = convertView
-        if (listItemView == null)
-            listItemView = LayoutInflater
-                .from(context)
-                .inflate(getLayoutId(getItemViewType(position)), parent, false)
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+      var listItemView = convertView
+      if (listItemView == null)
+        listItemView = LayoutInflater
+          .from(context)
+          .inflate(getLayoutId(getItemViewType(position)), parent, false)
 
-        listItemView?.setOnClickListener { onItemSelected(it, listItemsFiltered[position]) }
+      listItemView?.setOnClickListener { onItemSelected(it, listItemsFiltered[position]) }
 
-        return listItemView!!.apply { bind(this, listItemsFiltered[position], query) }
+      return listItemView!!.apply { bind(this, listItemsFiltered[position], query) }
     }
 
     private inner class ValueFilter : Filter() {
