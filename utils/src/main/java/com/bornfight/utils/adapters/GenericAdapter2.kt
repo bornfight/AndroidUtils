@@ -1,26 +1,22 @@
 package com.bornfight.utils.adapters
 
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bornfight.utils.adapters.GenericAdapter.GenericViewHolder
+import com.bornfight.utils.adapters.GenericAdapter2.GenericViewHolder
 import java.util.*
 
 /**
- * Created by ianic on 16/02/2018.
-
  * This is a generic adapter class made for [RecyclerView].
  * It offers general functions to work with collections
  *  ([setItems], [addItems], [getItems], [getItem], [getItemPosition]).
  *
- * When extending, you just have to implement [getViewHolder] and [getLayoutId].
- * Also, you will need to set a type T for the data which this adapter will hold,
+ * When extending, you just have to implement [getViewHolder] and [createBinding].
+ * Also, you will need to set a type T for the data which this adapter will hold and type R for the corresponding binding class,
  * and implement a [GenericViewHolder] (for [onCreateViewHolder]).
  */
 
-@Deprecated(message = "Use GenericAdapter2 instead")
-abstract class GenericAdapter<T> : RecyclerView.Adapter<GenericAdapter.GenericViewHolder<T>>() {
+abstract class GenericAdapter2<T, R> : RecyclerView.Adapter<GenericViewHolder<T>>() {
 
     protected var listItems: MutableList<T> = ArrayList()
 
@@ -59,10 +55,8 @@ abstract class GenericAdapter<T> : RecyclerView.Adapter<GenericAdapter.GenericVi
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GenericViewHolder<T> {
-        return getViewHolder(
-            LayoutInflater.from(parent.context).inflate(getLayoutId(viewType), parent, false),
-            viewType
-        )
+        val binding = createBinding(parent)
+        return getViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: GenericViewHolder<T>, position: Int) {
@@ -73,9 +67,9 @@ abstract class GenericAdapter<T> : RecyclerView.Adapter<GenericAdapter.GenericVi
         return listItems.size
     }
 
-    protected abstract fun getLayoutId(viewType: Int): Int
+    protected abstract fun getViewHolder(binding: R): GenericViewHolder<T>
 
-    protected abstract fun getViewHolder(view: View, viewType: Int): GenericViewHolder<T>
+    protected abstract fun createBinding(parent: ViewGroup): R
 
     abstract class GenericViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {
         abstract fun bind(data: T)
