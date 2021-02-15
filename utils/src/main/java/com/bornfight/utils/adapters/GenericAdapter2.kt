@@ -55,7 +55,7 @@ abstract class GenericAdapter2<T, R> : RecyclerView.Adapter<GenericViewHolder<T>
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GenericViewHolder<T> {
-        val binding = createBinding(parent)
+        val binding = createBinding(parent, viewType)
         return getViewHolder(binding)
     }
 
@@ -69,7 +69,7 @@ abstract class GenericAdapter2<T, R> : RecyclerView.Adapter<GenericViewHolder<T>
 
     protected abstract fun getViewHolder(binding: R): GenericViewHolder<T>
 
-    protected abstract fun createBinding(parent: ViewGroup): R
+    protected abstract fun createBinding(parent: ViewGroup, viewType: Int): R
 
     abstract class GenericViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {
         abstract fun bind(data: T)
